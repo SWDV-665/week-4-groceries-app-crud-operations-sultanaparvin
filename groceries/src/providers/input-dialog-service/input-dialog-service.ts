@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AlertController, Checkbox } from 'ionic-angular';
 import { GroceriesServiceProvider } from '../../providers/groceries-service/groceries-service';
+import {  AlertController, ModalController } from 'ionic-angular';
 
 /*
   Generated class for the InputDialogServiceProvider provider.
@@ -8,14 +8,39 @@ import { GroceriesServiceProvider } from '../../providers/groceries-service/groc
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
+
 @Injectable()
 export class InputDialogServiceProvider {
-
-  constructor(public alertCtrl: AlertController, public dataService: GroceriesServiceProvider) {
+  modalPage;
+  constructor(public alertCtrl: AlertController, public dataService: GroceriesServiceProvider, public modalCtrl : ModalController) {
     console.log('Hello InputDialogServiceProvider Provider');
   }
 
-  showPrompt(item?, index?){
+  public openModal(item?, index?){
+    console.log('open');
+    var data = { 
+        modalTitle : item ? 'Edit Item' : 'Add Item',
+        modalMessage : item ?  "Please edit item..." : "Please enter item...", 
+        name : item ? item.name : null, 
+        quantity : item ? item.quantity : null,  
+      };
+    this.modalPage = this.modalCtrl.create('ModalPage',data); 
+    this.modalPage.onDidDismiss(returnedDataFromModal =>{
+      if(returnedDataFromModal!=undefined){ //Save data
+        if(index !== undefined){
+          this.dataService.editItem(returnedDataFromModal,index);
+        }else{
+          this.dataService.addItem(returnedDataFromModal);
+        }
+      }
+    });
+    this.modalPage.present();
+  } 
+
+
+
+
+  /*showPrompt(item?, index?){
     const prompt = this.alertCtrl.create({
       title: item ? 'Edit Item' : 'Add Item',
       message: item ?  "Please edit item..." : "Please enter item...",
@@ -52,6 +77,6 @@ export class InputDialogServiceProvider {
       ]
     });
     prompt.present();
-  }
+  }*/
 
 }

@@ -27,7 +27,7 @@ export class HomePage {
       duration : 3000
     });
     toast.present();
-    this.inputDialogService.showPrompt(item,index);
+    this.inputDialogService.openModal(item,index);
   }
 
   removeItem(item, index){
@@ -40,7 +40,7 @@ export class HomePage {
   }
 
   addItem(){
-    this.inputDialogService.showPrompt();
+    this.inputDialogService.openModal();
   }
 
 }
